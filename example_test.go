@@ -77,7 +77,7 @@ func Example_basicConfiguration() {
 	rawJSON := []byte(`{
 	  "level": "debug",
 	  "encoding": "json",
-	  "outputPaths": ["stdout", "/tmp/logs"],
+	  "outputPaths": ["stdout", "/tmp/logs/zap.log"],
 	  "errorOutputPaths": ["stderr"],
 	  "initialFields": {"foo": "bar"},
 	  "encoderConfig": {
