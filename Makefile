@@ -44,7 +44,6 @@ $(STATICCHECK):
 test:
 	@go clean -testcache
 	@$(foreach dir,$(MODULE_DIRS),(cd $(dir) && go test -race ./...) &&) true
-	@$(foreach dir,$(MODULE_DIRS),(cd $(dir) && go test -c -covermode=count -coverpkg ./...) &&) true
 
 .PHONY: cover
 cover:
