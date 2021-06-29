@@ -1,4 +1,4 @@
-// Copyright (c) 2020 Uber Technologies, Inc.
+// Copyright (c) 2021 Uber Technologies, Inc.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,30 +18,30 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package zap
+package zapio_test
 
 import (
-	"testing"
-	"time"
+	"io"
+	"log"
 
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
-	"go.uber.org/zap/zaptest/observer"
+	"go.uber.org/zap"
+	"go.uber.org/zap/zapio"
 )
 
-type constantClock time.Time
+func ExampleWriter() {
+	logger := zap.NewExample()
+	w := &zapio.Writer{Log: logger}
 
-func (c constantClock) Now() time.Time { return time.Time(c) }
-func (c constantClock) NewTicker(d time.Duration) *time.Ticker {
-	return &time.Ticker{}
-}
+	io.WriteString(w, "starting up\n")
+	io.WriteString(w, "running\n")
+	io.WriteString(w, "shutting down\n")
 
-func TestWithClock(t *testing.T) {
-	date := time.Date(2077, 1, 23, 10, 15, 13, 441, time.UTC)
-	clock := constantClock(date)
-	withLogger(t, DebugLevel, []Option{WithClock(clock)}, func(log *Logger, logs *observer.ObservedLogs) {
-		log.Info("")
-		require.Equal(t, 1, logs.Len(), "Expected only one log entry to be written.")
-		assert.Equal(t, date, logs.All()[0].Entry.Time, "Unexpected entry time.")
-	})
+	if err := w.Close(); err != nil {
+		log.Fatal(err)
+	}
+
+	// Output:
+	// {"level":"info","msg":"starting up"}
+	// {"level":"info","msg":"running"}
+	// {"level":"info","msg":"shutting down"}
 }

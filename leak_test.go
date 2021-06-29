@@ -1,4 +1,4 @@
-// Copyright (c) 2020 Uber Technologies, Inc.
+// Copyright (c) 2021 Uber Technologies, Inc.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,19 +20,12 @@
 
 package zap
 
-import "time"
+import (
+	"testing"
 
-// Clock is a source of time for logged entries.
-type Clock interface {
-	// Now returns the current local time.
-	Now() time.Time
-}
+	"go.uber.org/goleak"
+)
 
-// systemClock implements default Clock that uses system time.
-type systemClock struct{}
-
-var _systemClock Clock = systemClock{}
-
-func (systemClock) Now() time.Time {
-	return time.Now()
+func TestMain(m *testing.M) {
+	goleak.VerifyTestMain(m)
 }
